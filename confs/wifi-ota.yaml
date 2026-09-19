@@ -1,5 +1,7 @@
 wifi:
-  power_save_mode: LIGHT
+  # This controller is mains-powered and its signal is marginal; avoid radio
+  # sleep latency and missed beacons while keeping upstream OTA provisioning.
+  power_save_mode: none
   reboot_timeout: 0s
   ap:
     ssid: "${name}"
