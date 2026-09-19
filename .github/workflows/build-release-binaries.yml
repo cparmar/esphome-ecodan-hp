@@ -3,7 +3,7 @@ name: Build Release Firmware OTA images
 on:
   release:
     types:
-      - created
+      - published
 #  workflow_dispatch:
 
 permissions:
@@ -113,4 +113,3 @@ jobs:
               s/FILEFACTORY/$PREFIX.factory.bin/g" json/manifest.json > $MANIFEST.json
           cat $MANIFEST.json
           gh release upload --clobber ${{github.event.release.tag_name}} $MANIFEST.json
-
