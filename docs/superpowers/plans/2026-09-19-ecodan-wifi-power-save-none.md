@@ -108,7 +108,8 @@ git push cparmar feat/wifi-power-save-none
 - [ ] **Step 2: Merge the branch into fork `main` and create release tag `2026-09-18.01-cdp.1`**
 
 Use GitHub CLI only after the branch and local validation are verified.  The
-fork workflow triggers on the resulting published release event.
+fork workflow triggers on the resulting published release event; if GitHub
+does not create a run, dispatch the workflow with that already-published tag.
 
 - [ ] **Step 3: Verify publication before live install**
 
