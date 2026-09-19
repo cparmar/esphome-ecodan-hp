@@ -24,7 +24,8 @@ It makes only two behavioural changes:
 2. `confs/ota.yaml` points the existing `Firmware Update` entity at the fork's
    `releases/latest` manifest.  Therefore, after one manual migration OTA,
    subsequent updates in Home Assistant continue from the fork and retain the
-   Wi-Fi policy.
+   Wi-Fi policy.  The manifest's OTA, factory-image and release URLs are also
+   fork-owned, so an update never silently switches back to upstream artifacts.
 
 The initial fork image will be installed through the already enabled
 ESPHome web-server OTA path.  This creates a brief telemetry interruption but
