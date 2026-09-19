@@ -30,6 +30,9 @@ The initial fork image will be installed through the already enabled
 ESPHome web-server OTA path.  This creates a brief telemetry interruption but
 does not change heat-pump settings or provisioned Wi-Fi credentials.
 
+The fork's release workflow triggers on a published release.  This matches
+GitHub CLI release creation and ensures the OTA assets are built automatically.
+
 ## Constraints
 
 - No Wi-Fi password, API key, or OTA password is stored in the fork.
