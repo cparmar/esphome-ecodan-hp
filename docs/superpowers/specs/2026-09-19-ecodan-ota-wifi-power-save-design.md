@@ -30,8 +30,10 @@ The initial fork image will be installed through the already enabled
 ESPHome web-server OTA path.  This creates a brief telemetry interruption but
 does not change heat-pump settings or provisioned Wi-Fi credentials.
 
-The fork's release workflow triggers on a published release.  This matches
-GitHub CLI release creation and ensures the OTA assets are built automatically.
+The fork's release workflow accepts both a published release and an explicit
+manual dispatch with the existing release tag.  The latter is a deterministic
+fallback when GitHub does not emit a release workflow run for a CLI-published
+release; both paths build and upload to the same tag.
 
 ## Constraints
 

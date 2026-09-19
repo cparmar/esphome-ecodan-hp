@@ -31,6 +31,10 @@ def test_release_workflow_builds_published_releases() -> None:
     text = RELEASE_WORKFLOW.read_text(encoding="utf-8")
 
     assert re.search(r"release:\n\s+types:\n\s+- published\s*$", text, re.MULTILINE)
+    assert "workflow_dispatch:" in text
+    assert "release_tag:" in text
+    assert "RELEASE_TAG:" in text
+    assert "github.event.release.tag_name || inputs.release_tag" in text
 
 
 if __name__ == "__main__":

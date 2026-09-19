@@ -4,13 +4,19 @@ on:
   release:
     types:
       - published
-#  workflow_dispatch:
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: Existing release tag that receives the generated artifacts
+        required: true
+        type: string
 
 permissions:
   contents: write
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  RELEASE_TAG: ${{ github.event.release.tag_name || inputs.release_tag }}
 
 jobs:
   build:
@@ -30,7 +36,7 @@ jobs:
         run: |
           echo "wifi_ssid: dummy" > secrets.yaml
           echo "wifi_password: dummydummydummy" >> secrets.yaml
-          echo "PREFIX=${{ matrix.board }}-${{ matrix.zone }}-${{ matrix.lang }}-${{ github.event.release.tag_name }}" >> $GITHUB_ENV
+          echo "PREFIX=${{ matrix.board }}-${{ matrix.zone }}-${{ matrix.lang }}-${{ env.RELEASE_TAG }}" >> $GITHUB_ENV
           echo "MANIFEST=manifest-${{ matrix.board }}-${{ matrix.zone }}-${{ matrix.lang }}" >> $GITHUB_ENV
 
       - name: prepare build yaml
@@ -60,7 +66,7 @@ jobs:
           cat build.yaml
 
       - name: Display the release tag
-        run: echo ${{ github.event.release.tag_name }}
+        run: echo ${{ env.RELEASE_TAG }}
 
       - name: Prepare build env
         uses: actions/setup-python@v5.6.0
@@ -86,8 +92,8 @@ jobs:
           cp .esphome/build/ecodan-heatpump/build/firmware.ota.bin $PREFIX.ota.bin
           cp .esphome/build/ecodan-heatpump/build/firmware.factory.bin $PREFIX.factory.bin
           cp .esphome/build/ecodan-heatpump/build/firmware.elf $PREFIX.elf
-          gh release upload --clobber ${{github.event.release.tag_name}} $PREFIX.ota.bin
-          gh release upload --clobber ${{github.event.release.tag_name}} $PREFIX.factory.bin
+          gh release upload --clobber ${{env.RELEASE_TAG}} $PREFIX.ota.bin
+          gh release upload --clobber ${{env.RELEASE_TAG}} $PREFIX.factory.bin
       
       - name: Upload ELF for debugging
         if: matrix.lang == 'en'
@@ -95,7 +101,7 @@ jobs:
           GITHUB_TOKEN: ${{ github.TOKEN }}
         run: |
           gzip $PREFIX.elf
-          gh release upload --clobber ${{github.event.release.tag_name}} $PREFIX.elf.gz
+          gh release upload --clobber ${{env.RELEASE_TAG}} $PREFIX.elf.gz
 
       - name: Create manifest.json for firmware
         env:
@@ -112,4 +118,4 @@ jobs:
               s/FILEOTA/$PREFIX.ota.bin/g; \
               s/FILEFACTORY/$PREFIX.factory.bin/g" json/manifest.json > $MANIFEST.json
           cat $MANIFEST.json
-          gh release upload --clobber ${{github.event.release.tag_name}} $MANIFEST.json
+          gh release upload --clobber ${{env.RELEASE_TAG}} $MANIFEST.json
